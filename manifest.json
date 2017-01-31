@@ -1,0 +1,21 @@
+{
+  "manifest_version":2,
+
+  "name":"newtab",
+  "description": "This extension lets you open each link in new tab",
+  "version":"1.0",
+  "author": "ritik saxena",
+
+  "browser_action":{
+    "default_icon":"abc.png",
+    "default_title": "newtab"
+  },
+  "background":{
+    "persistent":false,
+    "scripts":["background.js"]
+  },
+  "content_scripts":[{
+    "js":["script.js"],
+    "matches":["<all_urls>"]
+    }]
+}
