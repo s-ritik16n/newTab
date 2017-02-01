@@ -6,13 +6,8 @@ chrome.browserAction.onClicked.addListener(function(tab){
 });
 
 chrome.tabs.onActivated.addListener(function(activeInfo){
-  console.log("tab changed, clicked: ",clicked);
-  if(clicked == 1){
-    chrome.tabs.sendMessage(activeInfo.tabid,{clicked:clicked});
-  }
-  else if(clicked == 0){
-    chrome.tabs.sendMessage(activeInfo.tabid,{clicked:clicked});
-  }
+  //alert("tab changed, clicked: "+clicked);
+  chrome.tabs.sendMessage(activeInfo.tabid,{clicked:clicked});
 })
 
 function changeColor(clicked){
