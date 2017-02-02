@@ -1,20 +1,20 @@
-var clicked = Number(0);
+var clicked = Number(0)
 chrome.browserAction.onClicked.addListener(function(tab){
-  clicked = 1-clicked;
-  changeColor(clicked);
+  clickListener();
   chrome.tabs.sendMessage(tab.id,{clicked:clicked});
 });
 
 chrome.tabs.onActivated.addListener(function(activeInfo){
   if(clicked == 1){
-    chrome.tabs.sendMessage(activeInfo.tabId,{clicked:clicked});
   }
 })
 
 chrome.tabs.onUpdated.addListener(function(tabid,changeInfo,tab) {
-  if(clicked == 1){
-        chrome.tabs.sendMessage(tabid,{clicked:clicked});
-    }
+  if(changeInfo.status == "complete"){
+    clickListener();
+  } else {
+    clickListener();
+  }
 })
 
 function changeColor(clicked){
@@ -23,4 +23,27 @@ function changeColor(clicked){
   }else {
     chrome.browserAction.setIcon({path: 'dark.png'});
   }
+}
+
+function clickListener(){
+  chrome.storage.local.get("click",function(result){
+    if (result.click == 0) {
+      chrome.storage.local.set({"click":1});
+      changeColor(result.click);
+    } else if (result.click == 1) {
+      chrome.storage.local.set({"click":0});
+      changeColor(result.click)
+    } else if (result.click == null) {
+      chrome.storage.local.set({"click":1});
+      changeColor(result.click)
+    } else if (result.click == undefined) {
+      chrome.storage.local.set({"click":1});
+      changeColor(result.click)
+    }
+    sendMessage(result.click);
+  })
+}
+
+function sendMessage(click){
+  chrome.tabs.sendMessage(activeInfo.tabId,{clicked:click});
 }
