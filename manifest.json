@@ -3,7 +3,7 @@
 
   "name":"newtab",
   "description": "This extension lets you open each link in new tab",
-  "version":"1.0",
+  "version":"1.0.0",
   "author": "ritik saxena",
 
   "browser_action":{

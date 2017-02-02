@@ -17,10 +17,24 @@ chrome.browserAction.onClicked.addListener(function(tab){
   })
 });
 
+chrome.tabs.onCreated(function(tab){
+  chrome.storage.local.get("click",function(result){
+    if(result.click == 0){
+      chrome.tabs.local.set({"click":0});
+    } else if (result.click == 1) {
+      chrome.tabs.local.set({"click":1});
+    }
+  })
+})
+
 chrome.tabs.onActivated.addListener(function(activeInfo){
   chrome.storage.local.get("click",function(result){
+    console.log("click value: "+result.click);
     if(result.click == 1){
+      console.log("onActivated");
       mainProc(activeInfo.tabId,result.click);
+    } else if (result.click == 0) {
+      mainProc(activeInfo.tabId,result.click)
     }
   })
 })
@@ -29,9 +43,10 @@ chrome.tabs.onUpdated.addListener(function(tabid,changeInfo,tab) {
   if(changeInfo.status == "complete"){
     chrome.storage.local.get("click",function(result){
       if(result.click == 1){
-      chrome.tabs.query({active:true,currentWindow:true},function(tabs){
-        mainProc(tabs[0].id,result.click);
-      });
+        console.log("onUpdated");
+        mainProc(tabid,result.click);
+      //chrome.tabs.query({active:true,currentWindow:true},function(tabs){
+      //});
       }
     })
   }
@@ -40,14 +55,15 @@ chrome.tabs.onUpdated.addListener(function(tabid,changeInfo,tab) {
 chrome.tabs.onReplaced.addListener(function(addedTabId,removedTabId){
   chrome.storage.local.get("click",function(result){
     if(result.click == 1){
-      mainProc(addedTabId,result.click);
+      console.log("onReplaced");
+      mainProc(removedTabId,result.click);
     }
   })
 })
 
 function changeIcon(clicked){
   if(clicked == 1){
-    chrome.browserAction.setIcon({path: 'light.png'});
+    chrome.browserAction.setIcon({path: {"38":"lights.png"}});
   }else {
     chrome.browserAction.setIcon({path: 'dark.png'});
   }
@@ -56,6 +72,7 @@ function changeIcon(clicked){
 function activate(id){
   chrome.storage.local.get("click",function(result){
     if(result.click == 1){
+      console.log("activate");
       mainProc(id,result.click);
     }
   })
