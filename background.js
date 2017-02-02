@@ -1,12 +1,10 @@
 var clicked = Number(0)
 chrome.browserAction.onClicked.addListener(function(tab){
   clickListener();
-  chrome.tabs.sendMessage(tab.id,{clicked:clicked});
 });
 
 chrome.tabs.onActivated.addListener(function(activeInfo){
-  if(clicked == 1){
-  }
+  clickListener();
 })
 
 chrome.tabs.onUpdated.addListener(function(tabid,changeInfo,tab) {
