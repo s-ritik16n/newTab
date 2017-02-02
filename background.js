@@ -26,9 +26,8 @@ function changeColor(clicked){
 function activate(){
   chrome.storage.local.get("click",function(result){
     if(result.click == 1){
-      chrome.storage.local.set({"click":1});
-      changeColor(result.click);
       sendMessage(result.click);
+      changeColor(result.click);
     }
   })
 }
@@ -37,18 +36,15 @@ function clickListener(){
   chrome.storage.local.get("click",function(result){
     if (result.click == 0) {
       chrome.storage.local.set({"click":1});
-      changeColor(result.click);
     } else if (result.click == 1) {
       chrome.storage.local.set({"click":0});
-      changeColor(result.click)
     } else if (result.click == null) {
       chrome.storage.local.set({"click":1});
-      changeColor(result.click)
     } else if (result.click == undefined) {
       chrome.storage.local.set({"click":1});
-      changeColor(result.click)
     }
     sendMessage(result.click);
+    changeColor(result.click);
   })
 }
 
