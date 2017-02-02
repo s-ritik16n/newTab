@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener(function(msg,sender){
       btn[i].className += " newtab";
     }
   } else if (msg.clicked == 0) {
-    console.log("clicked:",msg.clicked);
+    console.log("clicked:",msg.click);
     for(var i = 0;i<a.length;i++){
       if(a[i].classList.contains("newtab")){
         a[i].classList.remove("newtab");

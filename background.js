@@ -1,17 +1,17 @@
-var clicked = Number(0)
+
 chrome.browserAction.onClicked.addListener(function(tab){
-  clickListener();
+  clickListener(tab.id);
 });
 
 chrome.tabs.onActivated.addListener(function(activeInfo){
-  activate();
+  activate(activeInfo.tabId);
 })
 
 chrome.tabs.onUpdated.addListener(function(tabid,changeInfo,tab) {
   if(changeInfo.status == "complete"){
-    activate();
+    activate(tabid);
   } else {
-    activate();
+    activate(tabid);
   }
 })
 
@@ -23,31 +23,37 @@ function changeColor(clicked){
   }
 }
 
-function activate(){
+function activate(id){
   chrome.storage.local.get("click",function(result){
     if(result.click == 1){
-      sendMessage(result.click);
-      changeColor(result.click);
+      mainProc(id,result.click);
     }
   })
 }
 
-function clickListener(){
+function clickListener(id){
   chrome.storage.local.get("click",function(result){
     if (result.click == 0) {
-      chrome.storage.local.set({"click":1});
+      chrome.storage.local.set({"click":1},function(){
+        mainProc(id,result.click);
+      });
     } else if (result.click == 1) {
-      chrome.storage.local.set({"click":0});
+      chrome.storage.local.set({"click":0},function(){
+        mainProc(id,result.click);
+      });
     } else if (result.click == null) {
-      chrome.storage.local.set({"click":1});
+      chrome.storage.local.set({"click":1},function(){
+        mainProc(id,result.click);
+      });
     } else if (result.click == undefined) {
-      chrome.storage.local.set({"click":1});
+      chrome.storage.local.set({"click":1},function(){
+        mainProc(id,result.click);
+      });
     }
-    sendMessage(result.click);
-    changeColor(result.click);
   })
 }
 
-function sendMessage(click){
-  chrome.tabs.sendMessage(activeInfo.tabId,{clicked:click});
+function mainProc(id,click){
+  changeColor(click);
+  chrome.tabs.sendMessage(id,{clicked:click});
 }
