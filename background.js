@@ -1,21 +1,51 @@
 
 chrome.browserAction.onClicked.addListener(function(tab){
-  clickListener(tab.id);
+  chrome.storage.local.get('click',function(result){
+    if(result.click == 0){
+        chrome.storage.local.set({"click":1},function(){
+        mainProc(tab.id,result.click);
+        });
+    } else if (result.click == 1) {
+        chrome.storage.local.set({"click":0},function(){
+        mainProc(tab.id,result.click);
+        });
+    } else if (result.click == undefined) {
+      chrome.storage.local.set({"click":1},function(){
+      mainProc(tab.id,result.click);
+      });
+    }
+  })
 });
 
 chrome.tabs.onActivated.addListener(function(activeInfo){
-  activate(activeInfo.tabId);
+  chrome.storage.local.get("click",function(result){
+    if(result.click == 1){
+      mainProc(activeInfo.tabId,result.click);
+    }
+  })
 })
 
 chrome.tabs.onUpdated.addListener(function(tabid,changeInfo,tab) {
   if(changeInfo.status == "complete"){
-    activate(tabid);
-  } else {
-    activate(tabid);
+    chrome.storage.local.get("click",function(result){
+      if(result.click == 1){
+      chrome.tabs.query({active:true,currentWindow:true},function(tabs){
+        mainProc(tabs[0].id,result.click);
+      });
+      }
+    })
   }
 })
 
-function changeColor(clicked){
+chrome.tabs.onReplaced.addListener(function(addedTabId,removedTabId){
+  chrome.storage.local.get("click",function(result){
+    if(result.click == 1){
+      mainProc(addedTabId,result.click);
+    }
+  })
+})
+
+function changeIcon(clicked){
   if(clicked == 1){
     chrome.browserAction.setIcon({path: 'light.png'});
   }else {
@@ -54,6 +84,6 @@ function clickListener(id){
 }
 
 function mainProc(id,click){
-  changeColor(click);
+  changeIcon(click);
   chrome.tabs.sendMessage(id,{clicked:click});
 }
