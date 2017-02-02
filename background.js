@@ -4,14 +4,14 @@ chrome.browserAction.onClicked.addListener(function(tab){
 });
 
 chrome.tabs.onActivated.addListener(function(activeInfo){
-  clickListener();
+  activate();
 })
 
 chrome.tabs.onUpdated.addListener(function(tabid,changeInfo,tab) {
   if(changeInfo.status == "complete"){
-    clickListener();
+    activate();
   } else {
-    clickListener();
+    activate();
   }
 })
 
@@ -21,6 +21,16 @@ function changeColor(clicked){
   }else {
     chrome.browserAction.setIcon({path: 'dark.png'});
   }
+}
+
+function activate(){
+  chrome.storage.local.get("click",function(result){
+    if(result.click == 1){
+      chrome.storage.local.set({"click":1});
+      changeColor(result.click);
+      sendMessage(result.click);
+    }
+  })
 }
 
 function clickListener(){
