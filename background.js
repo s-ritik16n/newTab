@@ -6,17 +6,21 @@ chrome.browserAction.onClicked.addListener(function(tab){
 });
 
 chrome.tabs.onActivated.addListener(function(activeInfo){
-  //alert("tab changed, clicked: "+clicked);
-  chrome.tabs.sendMessage(activeInfo.tabid,{clicked:clicked});
+  if(clicked == 1){
+    chrome.tabs.sendMessage(activeInfo.tabId,{clicked:clicked});
+  }
+})
+
+chrome.tabs.onUpdated.addListener(function(tabid,changeInfo,tab) {
+  if(clicked == 1){
+        chrome.tabs.sendMessage(tabid,{clicked:clicked});
+    }
 })
 
 function changeColor(clicked){
-  switch (clicked) {
-    case 1:
+  if(clicked == 1){
     chrome.browserAction.setIcon({path: 'light.png'});
-      break;
-    case 0:
+  }else {
     chrome.browserAction.setIcon({path: 'dark.png'});
-      break;
   }
 }
