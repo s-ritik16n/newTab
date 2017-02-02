@@ -17,16 +17,6 @@ chrome.browserAction.onClicked.addListener(function(tab){
   })
 });
 
-chrome.tabs.onCreated(function(tab){
-  chrome.storage.local.get("click",function(result){
-    if(result.click == 0){
-      chrome.tabs.local.set({"click":0});
-    } else if (result.click == 1) {
-      chrome.tabs.local.set({"click":1});
-    }
-  })
-})
-
 chrome.tabs.onActivated.addListener(function(activeInfo){
   chrome.storage.local.get("click",function(result){
     console.log("click value: "+result.click);
@@ -44,9 +34,9 @@ chrome.tabs.onUpdated.addListener(function(tabid,changeInfo,tab) {
     chrome.storage.local.get("click",function(result){
       if(result.click == 1){
         console.log("onUpdated");
+      chrome.tabs.query({active:true,currentWindow:true},function(tabs){
         mainProc(tabid,result.click);
-      //chrome.tabs.query({active:true,currentWindow:true},function(tabs){
-      //});
+      });
       }
     })
   }
@@ -54,10 +44,7 @@ chrome.tabs.onUpdated.addListener(function(tabid,changeInfo,tab) {
 
 chrome.tabs.onReplaced.addListener(function(addedTabId,removedTabId){
   chrome.storage.local.get("click",function(result){
-    if(result.click == 1){
-      console.log("onReplaced");
-      mainProc(removedTabId,result.click);
-    }
+    mainProc(addedTabId,result.click);
   })
 })
 
@@ -65,7 +52,7 @@ function changeIcon(clicked){
   if(clicked == 1){
     chrome.browserAction.setIcon({path: {"38":"lights.png"}});
   }else {
-    chrome.browserAction.setIcon({path: 'dark.png'});
+    chrome.browserAction.setIcon({path: {"38":"dark.png"}});
   }
 }
 
