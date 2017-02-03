@@ -31,12 +31,12 @@ chrome.tabs.onUpdated.addListener(function(tabid,changeInfo,tab) {
   if(changeInfo.status == "complete"){
     chrome.storage.local.get("click",function(result){
       console.log("click value(onUpdated): "+result.click);
-      if(result.click == 1){
+      setTimeout(function(){
         mainProc(tabid,result.click);
-      } else if (result.click == 0) {
-        mainProc(tabid,result.click);
-      }
+      },2000);
     })
+  } else if (changeInfo.status == "loading") {
+    mainProc(tabid,0);
   }
 })
 

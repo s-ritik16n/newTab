@@ -1,7 +1,8 @@
 {
   "manifest_version":2,
 
-  "name":"newtab",
+  "name":"newTab",
+  "short_name":"nT",
   "description": "This extension lets you open each link in new tab",
   "version":"1.0.0",
   "author": "ritik saxena",
