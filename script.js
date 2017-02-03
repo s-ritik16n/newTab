@@ -9,7 +9,7 @@ chrome.runtime.onMessage.addListener(function(msg,sender){
     }
   } else if (msg.clicked == 0) {
     for(var i = 0;i<a.length;i++){
-      if(a[i].classList.contains("newtab")){
+      if(a[i].classList.contains("0335ff33654533bd68d644e1ff0fd1ff")){
         a[i].classList.remove("0335ff33654533bd68d644e1ff0fd1ff");
         a[i].removeAttribute("target");
       }
